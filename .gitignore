@@ -137,3 +137,6 @@ _NCrunch*
 
 # Reqnroll generated files
 *.feature.cs
+
+# Rendered documentation
+documentation/html

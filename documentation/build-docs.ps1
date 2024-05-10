@@ -1,0 +1,1 @@
+docker run -v ${PWD}:/docs --workdir /docs redocly/cli:1.11.0 build-docs openapi.yaml --output html/openapi.html
