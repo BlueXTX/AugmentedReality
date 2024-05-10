@@ -11,4 +11,4 @@ jobs:
       - name: Call lint script
         shell: pwsh
         working-directory: ./documentation
-        run: ./lint-openapi.ps1
+        run: ./lint-openapi.ps1 -outputFormat github-actions
