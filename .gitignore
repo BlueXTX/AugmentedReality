@@ -134,3 +134,6 @@ _NCrunch*
 
 # JetBrains IDE
 .idea
+
+# Reqnroll generated files
+*.feature.cs
