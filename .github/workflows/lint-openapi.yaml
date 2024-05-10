@@ -2,12 +2,14 @@ name: Lint OpenAPI schema
 on:
   pull_request:
     branches: [ "develop" ]
+    paths:
+      - 'documentation/**'
 jobs:
   lint_openapi_schema:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Call lint script
         shell: pwsh
         working-directory: ./documentation
