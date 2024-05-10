@@ -1,0 +1,345 @@
+openapi: 3.0.0
+info:
+  title: Augmented reality
+  version: '1.0'
+  description: Augmented reality api
+  contact:
+    name: Mikhail Krushelnitskiy
+    email: bluextchannel@gmail.com
+  license:
+    name: MIT
+tags:
+  - name: Collections
+  - name: Items
+servers:
+  - url: 'http://localhost:45631'
+    description: Local dev server
+paths:
+  /collection:
+    post:
+      summary: Create new collection
+      operationId: put-collection
+      responses:
+        '201':
+          description: Collection successfully created
+        '401':
+          description: Unauthorized
+        '409':
+          description: Collection with given name already exists
+        '422':
+          description: Unprocessable Entity
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCollection'
+      description: Create new collection
+      tags:
+        - Collections
+  '/collection/{collectionId}':
+    parameters:
+      - $ref: '#/components/parameters/collectionId'
+    get:
+      summary: Get collection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: get-collection-collectionId
+      description: Get collection by it's identifier
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      tags:
+        - Collections
+    patch:
+      summary: Patch collection
+      operationId: patch-collection-collectionId
+      responses:
+        '200':
+          description: OK
+          content: {}
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+      description: Patch collection
+      requestBody:
+        $ref: '#/components/requestBodies/PatchCollection'
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      tags:
+        - Collections
+    delete:
+      summary: Delete collection
+      operationId: delete-collection-collectionId
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      tags:
+        - Collections
+      description: Delete collection with all items
+  '/collection/{collectionId}/item':
+    parameters:
+      - $ref: '#/components/parameters/collectionId'
+    post:
+      summary: Create new item
+      operationId: put-collection-collectionId-item
+      responses:
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Collection not found
+        '409':
+          description: Item with given name already exists
+        '422':
+          description: Unprocessable Entity
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateItem'
+      tags:
+        - Items
+      description: Create new collection item
+  '/collection/{collectionId}/item/{itemId}':
+    parameters:
+      - $ref: '#/components/parameters/collectionId'
+      - $ref: '#/components/parameters/itemId'
+    get:
+      summary: Get item
+      tags:
+        - Items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Entity
+      operationId: get-collection-collectionId-item-itemId
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      description: Get item by it's id
+    patch:
+      summary: Patch item
+      operationId: patch-collection-collectionId-item-itemId
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      requestBody:
+        $ref: '#/components/requestBodies/PatchItem'
+      tags:
+        - Items
+      description: Patch item
+    delete:
+      summary: Delete item
+      operationId: delete-collection-collectionId-item-itemId
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      tags:
+        - Items
+      description: Delete item
+  '/collection/{collectionId}/item/{itemId}/preview':
+    parameters:
+      - $ref: '#/components/parameters/collectionId'
+      - $ref: '#/components/parameters/itemId'
+    get:
+      summary: Get item preview
+      tags:
+        - Items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/ItemPreviewImage'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: get-collection-collectionId-item-itemId-preview
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      description: Get item preview image
+  '/collection/{collectionId}/item/{itemId}/download':
+    parameters:
+      - $ref: '#/components/parameters/collectionId'
+      - $ref: '#/components/parameters/itemId'
+    get:
+      summary: Download item model
+      tags:
+        - Items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                $ref: '#/components/schemas/ItemModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      operationId: get-collection-collectionId-item-itemid-download
+      parameters:
+        - $ref: '#/components/parameters/X-UserId'
+      requestBody:
+        content: {}
+      description: Download item 3d model file
+components:
+  schemas:
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        itemsCount:
+          type: integer
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+    ItemPreviewImage:
+      title: ItemPreview
+      type: string
+      format: binary
+    ItemModel:
+      title: ItemModel
+      type: string
+      format: binary
+  parameters:
+    X-UserId:
+      name: X-UserId
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Unique user identifier from identity provider
+    collectionId:
+      name: collectionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Collection unique identifier
+    itemId:
+      name: itemId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Item unique identifier
+  requestBodies:
+    CreateCollection:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+            required:
+              - name
+    PatchCollection:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+    CreateItem:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              previewImage:
+                type: string
+                format: binary
+              file:
+                type: string
+                format: binary
+            required:
+              - name
+              - file
+    PatchItem:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              previewImage:
+                type: string
+                format: binary
+              file:
+                type: string
+                format: binary
+  securitySchemes: {}
+security: []
