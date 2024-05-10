@@ -145,8 +145,6 @@ paths:
           description: Forbidden
         '404':
           description: Not Found
-        '422':
-          description: Unprocessable Entity
       operationId: get-collection-collectionId-item-itemId
       parameters:
         - $ref: '#/components/parameters/X-UserId'
